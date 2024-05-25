@@ -13,10 +13,10 @@ import face_recognition
 import time
 model=YOLO('fakevsrealface.pt')
 # إعداد Firebase
-cred = credentials.Certificate("serviceAccountKey.json")
+cred = credentials.Certificate("here your json file ")
 firebase_admin.initialize_app(cred, {
-    'databaseURL': "https://faceface-f5d7f-default-rtdb.firebaseio.com/",
-    'storageBucket': 'faceface-f5d7f.appspot.com'
+    'databaseURL': "URL from databese",
+    'storageBucket': 'from databese storage'
 })
 bucket = storage.bucket()
 class_name=['device', 'live', 'mask', 'photo']
