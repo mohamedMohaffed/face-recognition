@@ -2,8 +2,8 @@
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
-cred = credentials.Certificate("serviceAccountKey.json")
-firebase_admin.initialize_app(cred,{'databaseURL':"https://faceface-f5d7f-default-rtdb.firebaseio.com/"})
+cred = credentials.Certificate("here your json file ")
+firebase_admin.initialize_app(cred,{'databaseURL':"here URL from databes "})
 ref=db.reference('Students')
 data={
     "1122":{
