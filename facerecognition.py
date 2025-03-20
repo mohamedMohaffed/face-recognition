@@ -11,8 +11,8 @@ from firebase_admin import credentials, storage, db
 import cvzone
 import face_recognition
 import time
+
 model=YOLO('fakevsrealface.pt')
-# إعداد Firebase
 cred = credentials.Certificate("here your json file ")
 firebase_admin.initialize_app(cred, {
     'databaseURL': "URL from databese",
@@ -20,19 +20,17 @@ firebase_admin.initialize_app(cred, {
 })
 bucket = storage.bucket()
 class_name=['device', 'live', 'mask', 'photo']
-# إعدادات الكاميرا والمتحولات
+
 cap = cv2.VideoCapture(0)
 cap.set(3, 640)
 cap.set(4, 480)
 imgbackground = cv2.imread('Resources/background.jpg')
 imgbackground2 = cv2.imread('Resources/background2.png')
 
-# تحميل صور الوضعيات
 floderModesPath = "Resources/Modes"
 modePathList = os.listdir(floderModesPath)
 imgModeList = [cv2.imread(os.path.join(floderModesPath, path)) for path in modePathList]
 
-# تحميل بيانات الترميز
 with open('Encoding.p', "rb") as file:
     encodelistknewwithids = pickle.load(file)
 encodelistknew, studentIds = encodelistknewwithids
@@ -43,12 +41,10 @@ id = -1
 imgstud = []
 
 async def fetch_student_info(student_id):
-    # جلب بيانات الطالب من Firebase
     student_info = db.reference(f'Students/{student_id}').get()
     return student_info
 
 async def fetch_student_image(student_id):
-    # جلب صورة الطالب من Firebase
     blob = bucket.get_blob(f'Images/{student_id}.jpg')
     array = np.frombuffer(blob.download_as_string(), np.uint8)
     img_student = cv2.imdecode(array, cv2.COLOR_BGRA2BGR)
@@ -100,11 +96,9 @@ async def main():
                                 task1 = asyncio.create_task(fetch_student_info(id))
                                 task2 = asyncio.create_task(fetch_student_image(id))
 
-                                # استخدام await لجلب البيانات غير المتزامنة
                                 result_student_info = await task1
                                 result_imgstud = await task2
 
-                                # تحديث البيانات
                                 datetime_object = datetime.strptime(result_student_info['last_attendance'],
                                                                     '%Y-%m-%d %H:%M:%S')
                                 total_seconds = (datetime.now() - datetime_object).total_seconds()
@@ -159,7 +153,6 @@ async def main():
                     cv2.imshow('background', imgbackground)
                     cv2.waitKey(1)
 
-# تشغيل البرنامج غير المتزامن
 asyncio.run(main())
 
 
